@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Real-Time GPS Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+  <script>
+    var map;
+    var marker;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 0, lng: 0},
+        zoom: 14
+      });
+
+      // Create a marker with an initial position
+      marker = new google.maps.Marker({
+        map: map
+      });
+
+      // Start tracking the user's location
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          // Update the marker's position
+          marker.setPosition(pos);
+
+          // Center the map on the updated position
+          map.setCenter(pos);
+        }, function() {
+          handleLocationError(true);
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false);
+      }
+    }
+
+    function handleLocationError(browserHasGeolocation) {
+      var errorDiv = document.getElementById('error');
+
+      if (browserHasGeolocation) {
+        errorDiv.innerHTML = 'Error: The Geolocation service failed.';
+      } else {
+        errorDiv.innerHTML = 'Error: Your browser doesn\'t support geolocation.';
+      }
+    }
+  </script>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+    #error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Real-Time GPS Tracking</h1>
+  <div id="map"></div>
+  <div id="error"></div>
+
+  <script>
+    // Call the initMap() function when the page loads
+    window.onload = function() {
+      initMap();
+    };
+  </script>
+</body>
+</html>
